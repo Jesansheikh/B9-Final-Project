@@ -4,12 +4,27 @@ from fastapi.responses import JSONResponse
 from sklearn.ensemble import RandomForestRegressor # Using Regressor for example, change if classification needed
 import pickle
 import os
-
+# Add this to main.py after the imports
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 # Variable to store the trained model
 model = None
 MODEL_FILE = "random_forest_model.pkl"
+
+# Add this after app = FastAPI()
+origins = [
+    "http://localhost:3000",  # Allow requests from your Next.js frontend
+    # Add other origins if needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Load model if it exists
 if os.path.exists(MODEL_FILE):
